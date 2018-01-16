@@ -254,6 +254,13 @@ public class Test : MonoBehaviour {
 
 	public int FIBNumber = 6;
 
+    public string SetFibNumber
+    {
+        set { FIBNumber = int.Parse(value); }
+    }
+
+    private Action<CycleManager.TickState> mLog;
+
 	IEnumerator StartFIBTestCoroutine()
 	{
 		yield return new WaitForEndOfFrame();
@@ -372,19 +379,21 @@ public class Test : MonoBehaviour {
 		var result = cpu.IOGroups[resultName];
 		var write = cpu.IOGroups[writeName];
 
-		var log = new Action<CycleManager.TickState>((state) => { 
-			if (state != CycleManager.TickState.PreTick)
-				return;
-			Console.Instance.LogShort(
-				"DATA " +
-				data.IOArray.ToInt().ToString("00000") + " | INSTRUCTION " +
-				instr.IOArray.Print() + " | WRITE " +
-				write.IOArray.Print() + " | DATAADDR " +
-				dataAddr.IOArray.ToInt().ToString("00000") + " | INSTRADDR " +
-				instrAddr.IOArray.ToInt().ToString("00000") + " | RESULT " +
-				result.IOArray.ToInt().ToString("00000"));
-		});
-		CycleManager.Instance.Tick += log;
+	    if (mLog != null)
+	        CycleManager.Instance.Tick -= mLog;
+		mLog = (state) => { 
+		    if (state != CycleManager.TickState.PreTick)
+		        return;
+		    Console.Instance.LogShort(
+		        "DATA " +
+		        data.IOArray.ToInt().ToString("00000") + " | INSTRUCTION " +
+		        instr.IOArray.Print() + " | WRITE " +
+		        write.IOArray.Print() + " | DATAADDR " +
+		        dataAddr.IOArray.ToInt().ToString("00000") + " | INSTRADDR " +
+		        instrAddr.IOArray.ToInt().ToString("00000") + " | RESULT " +
+		        result.IOArray.ToInt().ToString("00000"));
+		};
+		CycleManager.Instance.Tick += mLog;
 
 		yield break;
 	}
