@@ -65,10 +65,10 @@ public class SchemeManager : MonoBehaviour
 
 	public void LoadSchemes()
 	{
-		var serialisedRules = ApplicationSettings.Load("BuildingRules");
 		try
 		{
-			mBuildingRules = MyJsonSerializer.Deserialize<Dictionary<string,SchemeBuilder>>(serialisedRules);
+		    var serialisedRules = ApplicationSettings.Load("BuildingRules");
+            mBuildingRules = MyJsonSerializer.Deserialize<Dictionary<string,SchemeBuilder>>(serialisedRules);
 			if (SchemesChanged != null)
 				SchemesChanged.Invoke();
 		}

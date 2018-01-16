@@ -7,7 +7,7 @@ public class SchemeViewer : MonoBehaviour {
 	[SerializeField] private GameObject mSchemePrefab = null;
 	[SerializeField] private Transform mContentHolder = null;
 
-	void Start () 
+	void Start ()
 	{
 		SchemeManager.Instance.SchemesChanged += Reload;
 		Reload ();
