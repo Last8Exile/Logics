@@ -379,6 +379,7 @@ public class Test : MonoBehaviour {
 		var result = cpu.IOGroups[resultName];
 		var write = cpu.IOGroups[writeName];
 
+	    Console.Instance.Clear();
 	    if (mLog != null)
 	        CycleManager.Instance.Tick -= mLog;
 		mLog = (state) => { 
@@ -392,6 +393,12 @@ public class Test : MonoBehaviour {
 		        dataAddr.IOArray.ToInt().ToString("00000") + " | INSTRADDR " +
 		        instrAddr.IOArray.ToInt().ToString("00000") + " | RESULT " +
 		        result.IOArray.ToInt().ToString("00000"));
+		    if (instrAddr.IOArray.ToInt() == commandCounter)
+		    {
+		        CycleManager.Instance.Stop();
+		        CycleManager.Instance.Tick -= mLog;
+		        mLog = null;
+		    }
 		};
 		CycleManager.Instance.Tick += mLog;
 

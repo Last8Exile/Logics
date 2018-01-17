@@ -85,5 +85,6 @@ public class Console : MonoBehaviour {
 	public void Clear()
 	{
 		mText.text = "";
+	    mCurrentLines = 0;
 	}
 }

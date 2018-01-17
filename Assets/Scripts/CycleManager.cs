@@ -69,19 +69,29 @@ public class CycleManager : MonoBehaviour {
 	{
 		if (mEnabled)
 		{
-			mStartStopButtonText.text = "Страт";
-			mProgressBar.anchorMax = new Vector2(0, 1);
-			mEnabled = false;
-			enabled = false;
+		    Stop();
 		}
 		else
 		{
-			if (!float.TryParse(mPeriodField.text, out mPeriod) || mPeriod <= 0)
-				return;
-			mStartStopButtonText.text = "Стоп";
-			mLastTickTime = Time.time;
-			mEnabled = true;
-			enabled = true;
+		    Start();
 		}
 	}
+
+    public void Start()
+    {
+        if (!float.TryParse(mPeriodField.text, out mPeriod) || mPeriod <= 0)
+            return;
+        mStartStopButtonText.text = "Стоп";
+        mLastTickTime = Time.time;
+        mEnabled = true;
+        enabled = true;
+    }
+
+    public void Stop()
+    {
+        mStartStopButtonText.text = "Страт";
+        mProgressBar.anchorMax = new Vector2(0, 1);
+        mEnabled = false;
+        enabled = false;
+    }
 }
