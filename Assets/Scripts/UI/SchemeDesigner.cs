@@ -200,7 +200,7 @@ public class SchemeDesigner : MonoBehaviour {
 		if (dialogResult == DialogResult.Cancel)
 			yield break;
 
-		var innerSchemeBuildInfo = new UIInnerSchemeBuildInfo(buildParams.Name, type, buildParams.Parameters, Vector2.zero);
+		var innerSchemeBuildInfo = new UIInnerSchemeBuildInfo(buildParams.Name, type, buildParams.Parameters, Vector2.zero, Vector2.one * 240);
 		CurrentScheme.AddScheme(innerSchemeBuildInfo);
 
 		yield break;

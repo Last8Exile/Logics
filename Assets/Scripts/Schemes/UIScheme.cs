@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 public class UIScheme : Scheme 
@@ -149,7 +150,7 @@ public class UIScheme : Scheme
 	{
 		public InnerContainer(UIInnerSchemeBuildInfo buildInfo)
 		{
-			InnerBuildInfo = buildInfo;
+			InnerBuildInfo = buildInfo.Clone();
 			Scheme = SchemeManager.Instance.GetBuildingRule(InnerBuildInfo.BuildString.Type).Build (InnerBuildInfo.BuildString.Parameters);
 		}
 
@@ -166,7 +167,7 @@ public class UIScheme : Scheme
 	{
 		public IOGroupContainer(UIIOGroupBuildInfo buildInfo, SchemeContainer parentScheme)
 		{
-			BuildInfo = buildInfo;
+			BuildInfo = buildInfo.Clone();
 			IOGroup = new SchemeIOGroup(buildInfo.BuildString.Size, buildInfo.BuildString.IO);
 			ParentScheme = parentScheme;
 		}
@@ -287,7 +288,12 @@ public class UIIOGroupBuildInfo
 		Position = position;
 	}
 
-	public IOGroupBuildString BuildString;
+    public UIIOGroupBuildInfo Clone()
+    {
+        return new UIIOGroupBuildInfo(BuildString, Position);
+    }
+
+    public IOGroupBuildString BuildString;
 	public Vector2 Position { 
 		get { return new Vector2(mPos_x,mPos_y); } 
 		set { mPos_x = value.x; mPos_y = value.y; } 
@@ -296,27 +302,41 @@ public class UIIOGroupBuildInfo
 }
 
 [Serializable]
-public class UIInnerSchemeBuildInfo
+public class UIInnerSchemeBuildInfo : IUpdateable
 {
 	public UIInnerSchemeBuildInfo()
 	{
 		
 	}
-	public UIInnerSchemeBuildInfo(string name,string type, string parameters, Vector2 position) : this(new SchemeBuildString(name, type, parameters), position)
+	public UIInnerSchemeBuildInfo(string name,string type, string parameters, Vector2 position, Vector2 size) : this(new SchemeBuildString(name, type, parameters), position, size)
 	{
 		
 	}
-	public UIInnerSchemeBuildInfo(SchemeBuildString buildString, Vector2 position)
+	public UIInnerSchemeBuildInfo(SchemeBuildString buildString, Vector2 position, Vector2 size)
 	{
 		BuildString = buildString;
 		Position = position;
+        Size = size;
 	}
 
-	public SchemeBuildString BuildString;
+    public UIInnerSchemeBuildInfo Clone()
+    {
+        return new UIInnerSchemeBuildInfo(BuildString, Position, Size);
+    }
 
-	public Vector2 Position { 
-		get { return new Vector2(mPosition_x,mPosition_y); } 
-		set { mPosition_x = value.x; mPosition_y = value.y; } 
-	}
-	private float mPosition_x, mPosition_y;
+    public SchemeBuildString BuildString;
+
+    public Vector2 Position;
+
+    public Vector2 Size;
+
+
+    public int Version = LastVersion;
+    private const int LastVersion = 1;
+
+    private static int Migrate_0(JToken token)
+    {
+        token["Size"] = JToken.FromObject(Vector2.one * 240, MyJsonSerializer.DefaultSerialiser);
+        return 1;
+    }
 }

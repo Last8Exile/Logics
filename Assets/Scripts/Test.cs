@@ -89,7 +89,7 @@ public class Test : MonoBehaviour {
 			new Vector2(200, 0)
 		));
 
-		scheme.AddScheme(new UIInnerSchemeBuildInfo(nand, NAND.Type, null, Vector2.zero));
+	    scheme.AddScheme(new UIInnerSchemeBuildInfo(nand, NAND.Type, null, Vector2.zero, Vector2.one * 240));
 
 		scheme.AddLink (new LinkBuilder (not, nand, input, NAND.Input, 0, 1, 0, 2));
 		scheme.AddLink (new LinkBuilder (nand, not, NAND.Output, output, 0, 1, 0, 1));
@@ -151,8 +151,8 @@ public class Test : MonoBehaviour {
 			new Vector2(200, 0)
 		));
 
-		scheme.AddScheme(new UIInnerSchemeBuildInfo(nandName, NAND.Type, null, Vector2.left * 50));
-		scheme.AddScheme(new UIInnerSchemeBuildInfo(notName, notType, null, Vector2.right * 50));
+		scheme.AddScheme(new UIInnerSchemeBuildInfo(nandName, NAND.Type, null, Vector2.left * 50, Vector2.one * 240));
+		scheme.AddScheme(new UIInnerSchemeBuildInfo(notName, notType, null, Vector2.right * 50, Vector2.one * 240));
 
 		scheme.AddLink (new LinkBuilder (schameName, nandName, input1, NAND.Input, 0, 1, 0, 1));
 		scheme.AddLink (new LinkBuilder (schameName, nandName, input2, NAND.Input, 0, 1, 1, 1));

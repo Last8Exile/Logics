@@ -57,8 +57,28 @@ public static class Extensions {
 		}
 		throw new UnityException();
 	}
-		
-	public static Vector3 ScreenToWorldPos(Vector2 point)
+
+    public static Vector2 InverseY(this Vector2 vector)
+    {
+        return new Vector2(vector.x, -vector.y);
+    }
+
+    public static Vector2 Clamp(this Vector2 vector, Vector2 min, Vector2 max)
+    {
+        return new Vector2(Mathf.Clamp(vector.x, min.x, max.x), Mathf.Clamp(vector.y, min.y, max.y));
+    }
+
+    public static Vector2 ClampMin(this Vector2 vector, Vector2 min)
+    {
+        return Clamp(vector, min, Vector2.positiveInfinity);
+    }
+
+    public static Vector2 ClampMax(this Vector2 vector, Vector2 max)
+    {
+        return Clamp(vector, Vector2.negativeInfinity, max);
+    }
+
+    public static Vector3 ScreenToWorldPos(Vector2 point)
 	{
 		return Camera.main.ScreenToWorldPoint(point.ToVector3());
 	}
