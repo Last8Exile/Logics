@@ -212,6 +212,18 @@ public class UISchemeBuilder : SchemeBuilder
 	public List<UIInnerSchemeBuildInfo> InnerSchemesBuildInfo;
 	public List<LinkBuilder> LinksBuildInfo;
 
+    public UISchemeBuilder Clone()
+    {
+        var newBuilder = new UISchemeBuilder();
+
+        newBuilder.SelfSchemeBuildInfo = SelfSchemeBuildInfo.Clone();
+        newBuilder.IOGroupsInfo = IOGroupsInfo.Select(x => x.Clone()).ToList();
+        newBuilder.InnerSchemesBuildInfo = InnerSchemesBuildInfo.Select(x => x.Clone()).ToList();
+        newBuilder.LinksBuildInfo = LinksBuildInfo.Select(x => x.Clone()).ToList();
+
+        return newBuilder;
+    }
+
 	public override Scheme Build (string parameters)
 	{
 		var scheme = new Scheme ((byte)IOGroupsInfo.Count);
@@ -270,7 +282,12 @@ public class UISelfSchemeBuildInfo
 		Name = name;
 	}
 
-	public string Name;
+    public string Name;
+
+    public UISelfSchemeBuildInfo Clone()
+    {
+        return new UISelfSchemeBuildInfo(Name);
+    }
 }
 
 [Serializable]
@@ -290,7 +307,7 @@ public class UIIOGroupBuildInfo
 
     public UIIOGroupBuildInfo Clone()
     {
-        return new UIIOGroupBuildInfo(BuildString, Position);
+        return new UIIOGroupBuildInfo(BuildString.Clone(), Position);
     }
 
     public IOGroupBuildString BuildString;
@@ -321,7 +338,7 @@ public class UIInnerSchemeBuildInfo : IUpdateable
 
     public UIInnerSchemeBuildInfo Clone()
     {
-        return new UIInnerSchemeBuildInfo(BuildString, Position, Size);
+        return new UIInnerSchemeBuildInfo(BuildString.Clone(), Position, Size);
     }
 
     public SchemeBuildString BuildString;

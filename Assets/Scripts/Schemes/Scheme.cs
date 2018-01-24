@@ -96,6 +96,11 @@ public class SchemeBuildString
 		Type = type;
 		Parameters = parameters;
 	}
+
+    public SchemeBuildString Clone()
+    {
+        return new SchemeBuildString(Name, Type, Parameters);
+    }
 }
 
 [Serializable]
@@ -114,6 +119,11 @@ public class IOGroupBuildString
 		Size = size;
 		IO = io;
 	}
+
+    public IOGroupBuildString Clone()
+    {
+        return new IOGroupBuildString(Name, Size, IO);
+    }
 }
 
 public enum IO

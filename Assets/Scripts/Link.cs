@@ -58,6 +58,12 @@ public class LinkBuilder
 		TargetStart = targetStart;
 		TargetCount = targetCount;
 	}
+
+    public LinkBuilder Clone()
+    {
+        return (LinkBuilder) MemberwiseClone();
+
+    }
 		
 	public string SourceName, TargetName, SourceGroupName, TargetGroupName;
 	public byte SourceStart,  SourceCount,  TargetStart,  TargetCount;

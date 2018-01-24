@@ -110,7 +110,7 @@ public class SchemeDesigner : MonoBehaviour {
 			CurrentScheme.DestroyThis();
 		}
 
-		var builder = (UISchemeBuilder)SchemeManager.Instance.GetBuildingRule(type);
+	    var builder = (SchemeManager.Instance.GetBuildingRule(type) as UISchemeBuilder).Clone();
 		CurrentScheme = builder.BuildUIScheme();
 		mSaveButton.gameObject.SetActive(true);
 		mIOGroupButton.gameObject.SetActive(true);
