@@ -176,7 +176,28 @@ public class SchemeDesigner : MonoBehaviour {
 		yield break;
 	}
 
-	public void AddInnerScheme(string type)
+    public void RemoveIOGroup(UIScheme.IOGroupContainer container)
+    {
+        StartCoroutine(removeIOGroup(container));
+    }
+
+    private IEnumerator removeIOGroup(UIScheme.IOGroupContainer container)
+    {
+        var dialog = Instantiate(mConfirmDialogPrefab, mUICanvas).GetComponent<ConfirmDialog>();
+        dialog.ShowDialog("Удалить группу " + container.BuildInfo.BuildString.Name + "?", "Удалив группу, будут удалены все связанные с ней ссылки");
+        yield return new WaitWhile(() => dialog.DialogResult == DialogResult.NotReady);
+
+        var dialogResult = dialog.DialogResult;
+        dialog.Dispose();
+
+        if (dialogResult == DialogResult.Cancel)
+            yield break;
+
+        CurrentScheme.DeleteIOGroup(container);
+        yield break;
+    }
+
+    public void AddInnerScheme(string type)
 	{
 		if (CurrentScheme == null) {
 			Console.Instance.Log("Сначала необходимо создать или загрузить схему");

@@ -77,6 +77,42 @@ public class UIScheme : Scheme
 		ioGroupContainer.Design = SchemeDesigner.Instance.CreateSelfIOGroupDesign(ioGroupContainer);
 	}
 
+    public void DeleteIOGroup(IOGroupContainer container)
+    {
+        var removedLinks = new List<LinkContainer>();
+        switch (container.IOGroup.IO)
+        {
+            case IO.Input:
+                Self.SourceThisLinks.Where(x=>x.BuildInfo.SourceGroupName==container.BuildInfo.BuildString.Name).ForEach(x =>
+                {
+                    if (removedLinks.Contains(x))
+                        return;
+                    removedLinks.Add(x);
+                    x.Link.RemoveLink();
+                    x.Design.DestroyThis();
+                    x.TargetScheme.TargetThisLinks.Remove(x);
+                    Links.Remove(x);
+                });
+                removedLinks.ForEach(x => Self.SourceThisLinks.Remove(x));
+                break;
+            case IO.Output:
+                Self.TargetThisLinks.Where(x => x.BuildInfo.TargetGroupName == container.BuildInfo.BuildString.Name).ForEach((x) => {
+                    if (removedLinks.Contains(x))
+                        return;
+                    x.Link.RemoveLink();
+                    x.Design.DestroyThis();
+                    x.SourceScheme.SourceThisLinks.Remove(x);
+                    Links.Remove(x);
+                });
+                removedLinks.ForEach(x => Self.TargetThisLinks.Remove(x));
+                break;
+        }
+        removedLinks.Clear();
+        (container.Design as IOSelfIOGroupDesign).DestroyThis();
+        IOGroups.Remove(container.BuildInfo.BuildString.Name);
+        IOGroupsInfo.Remove(container);
+    }
+
 	public void AddLink(LinkBuilder linkInfo)
 	{
 		var linkContainer = new LinkContainer (linkInfo, Schemes[linkInfo.SourceName], Schemes[linkInfo.TargetName]);
@@ -174,7 +210,7 @@ public class UIScheme : Scheme
 			
 		public SchemeIOGroup IOGroup;
 		public SchemeContainer ParentScheme;
-		public IOGroupDesign Design;
+        public IOGroupDesign Design;
 
 
 		public UIIOGroupBuildInfo BuildInfo;

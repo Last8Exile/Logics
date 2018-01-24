@@ -6,7 +6,7 @@ public class IOSelfIOGroupDesign : IOGroupDesign {
 
 	[SerializeField] private Transform mIOContainer = null;
 	[SerializeField] private GameObject mIOPrefab = null;
-	[SerializeField] private Button mAddLink = null;
+	[SerializeField] private Button mAddLink = null, mRemoveButton = null;
 	[SerializeField] private EventTrigger mEventTrigger = null;
 	[SerializeField] private Text mName = null;
 
@@ -49,8 +49,9 @@ public class IOSelfIOGroupDesign : IOGroupDesign {
 		}
 
 		SchemeDesigner.Instance.AddLinkStateChanged += OnAddLinkStateChanged;
+	    mRemoveButton.onClick.AddListener(() => SchemeDesigner.Instance.RemoveIOGroup(mContainer));
 
-		EventTrigger.Entry entry = new EventTrigger.Entry();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
 		entry.eventID = EventTriggerType.Drag;
 		entry.callback.AddListener((data) => { OnDrag((PointerEventData)data); });
 		mEventTrigger.triggers.Add(entry);
