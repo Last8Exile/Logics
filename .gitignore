@@ -5,3 +5,4 @@ Builds/*
 .vs/*
 Logics.lnk
 MakeBackup.bat
+Deploy.bat
