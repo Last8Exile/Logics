@@ -166,8 +166,10 @@ public class IOSelfIOGroupDesign : IOGroupDesign {
 
         ioTransform.position = newPos;
         bitsTransform.sizeDelta = actualSize;
-        mContainer.BuildInfo.Position = transform.localPosition.ToVector2();
+        mContainer.BuildInfo.Position = ioTransform.localPosition.ToVector2();
         mContainer.BuildInfo.Size = actualSize;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(bitsTransform); //BUG КОСТЫЛЬ UNNECESARY REBUILD WTF I NEED THIS PLEASE REMOVE FUCKING WEIRD
     }
 
     public void CornerOnEndDrag()
