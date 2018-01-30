@@ -327,31 +327,38 @@ public class UISelfSchemeBuildInfo
 }
 
 [Serializable]
-public class UIIOGroupBuildInfo
+public class UIIOGroupBuildInfo : IUpdateable
 {
 	public UIIOGroupBuildInfo()
 	{
 	}
-	public UIIOGroupBuildInfo(string name, byte size, IO io, Vector2 position) : this(new IOGroupBuildString(name,size,io), position)
+	public UIIOGroupBuildInfo(string name, byte size, IO io, Vector2 position, Vector2 designSize) : this(new IOGroupBuildString(name,size,io), position, designSize)
 	{
 	}
-	public UIIOGroupBuildInfo(IOGroupBuildString buildString, Vector2 position)
+	public UIIOGroupBuildInfo(IOGroupBuildString buildString, Vector2 position, Vector2 designSize)
 	{
 		BuildString = buildString;
 		Position = position;
+        Size = designSize;
 	}
 
     public UIIOGroupBuildInfo Clone()
     {
-        return new UIIOGroupBuildInfo(BuildString.Clone(), Position);
+        return new UIIOGroupBuildInfo(BuildString.Clone(), Position, Size);
     }
 
     public IOGroupBuildString BuildString;
-	public Vector2 Position { 
-		get { return new Vector2(mPos_x,mPos_y); } 
-		set { mPos_x = value.x; mPos_y = value.y; } 
-	}
-	private float mPos_x, mPos_y;
+    public Vector2 Position;
+    public Vector2 Size;
+
+    public int Version = LastVersion;
+    private const int LastVersion = 1;
+
+    private static int Migrate_0(JToken token)
+    {
+        token["Size"] = JToken.FromObject(new Vector2(IOSelfIOGroupDesign.MinCellWidth, token["BuildString"]["Size"].Value<byte>() * IOSelfIOGroupDesign.DefaultCellHeight), MyJsonSerializer.DefaultSerialiser);
+        return 1;
+    }
 }
 
 [Serializable]

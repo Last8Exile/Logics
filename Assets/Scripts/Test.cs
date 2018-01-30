@@ -80,14 +80,19 @@ public class Test : MonoBehaviour {
 		var scheme = new UIScheme(new UISelfSchemeBuildInfo(not), 2, 1, 2);
 		SchemeDesigner.Instance.CreateScheme(scheme);
 
-		scheme.AddIOGroup(new UIIOGroupBuildInfo(
+	    var width = IOSelfIOGroupDesign.MinCellWidth;
+	    var heigth = IOSelfIOGroupDesign.DefaultCellHeight;
+
+        scheme.AddIOGroup(new UIIOGroupBuildInfo(
 			new IOGroupBuildString(input, 1, IO.Input),
-			new Vector2(-200, 0)
+			new Vector2(-200, 0),
+            new Vector2(width, heigth*1)
 		));
 		scheme.AddIOGroup(new UIIOGroupBuildInfo(
 			new IOGroupBuildString(output, 1, IO.Output),
-			new Vector2(200, 0)
-		));
+			new Vector2(200, 0),
+			new Vector2(width, heigth*1)
+        ));
 
 	    scheme.AddScheme(new UIInnerSchemeBuildInfo(nand, NAND.Type, null, Vector2.zero, Vector2.one * 240));
 
@@ -137,19 +142,25 @@ public class Test : MonoBehaviour {
 		var scheme = new UIScheme(new UISelfSchemeBuildInfo(schameName), 3, 2, 4);
 		SchemeDesigner.Instance.CreateScheme(scheme);
 
-		scheme.AddIOGroup(new UIIOGroupBuildInfo(
+	    var width = IOSelfIOGroupDesign.MinCellWidth;
+	    var heigth = IOSelfIOGroupDesign.DefaultCellHeight;
+
+        scheme.AddIOGroup(new UIIOGroupBuildInfo(
 			new IOGroupBuildString(input1, 1, IO.Input),
-			new Vector2(-200, -100)
-		));
+			new Vector2(-200, -100),
+			new Vector2(width, heigth*1)
+        ));
 		scheme.AddIOGroup(new UIIOGroupBuildInfo(
 			new IOGroupBuildString(input2, 1, IO.Input),
-			new Vector2(-200, 100)
-		));
+			new Vector2(-200, 100),
+			new Vector2(width, heigth*1)
+        ));
 
 		scheme.AddIOGroup(new UIIOGroupBuildInfo(
 			new IOGroupBuildString(output, 1, IO.Output),
-			new Vector2(200, 0)
-		));
+			new Vector2(200, 0),
+			new Vector2(width, heigth*1)
+        ));
 
 		scheme.AddScheme(new UIInnerSchemeBuildInfo(nandName, NAND.Type, null, Vector2.left * 50, Vector2.one * 240));
 		scheme.AddScheme(new UIInnerSchemeBuildInfo(notName, notType, null, Vector2.right * 50, Vector2.one * 240));

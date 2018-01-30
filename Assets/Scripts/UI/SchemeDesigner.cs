@@ -171,7 +171,7 @@ public class SchemeDesigner : MonoBehaviour {
 		if (dialogResult == DialogResult.Cancel)
 			yield break;
 
-		var ioGroupBuildInfo = new UIIOGroupBuildInfo(buildParams, Vector2.zero);
+	    var ioGroupBuildInfo = new UIIOGroupBuildInfo(buildParams, Vector2.zero, new Vector2(IOSelfIOGroupDesign.MinCellWidth, buildParams.Size * IOSelfIOGroupDesign.DefaultCellHeight));
 		CurrentScheme.AddIOGroup(ioGroupBuildInfo);
 		yield break;
 	}

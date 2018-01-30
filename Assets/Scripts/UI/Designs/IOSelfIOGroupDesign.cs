@@ -4,13 +4,23 @@ using UnityEngine.UI;
 
 public class IOSelfIOGroupDesign : IOGroupDesign {
 
-	[SerializeField] private Transform mIOContainer = null;
+	[SerializeField] private Transform mIOContainer = null, mBitsContainer = null;
 	[SerializeField] private GameObject mIOPrefab = null;
 	[SerializeField] private Button mAddLink = null, mRemoveButton = null;
 	[SerializeField] private EventTrigger mEventTrigger = null;
 	[SerializeField] private Text mName = null;
 
-	private IOToggler[] mIOTogglers;
+
+    public const float MinCellWidth = 50;
+    public const float MinCellHeight = 10;
+    public const float DefaultCellHeight = 50;
+
+    private Vector2 mMinSize
+    {
+        get { return new Vector2(MinCellWidth, MinCellHeight * mContainer.BuildInfo.BuildString.Size); }
+    }
+
+    private IOToggler[] mIOTogglers;
 	private UIScheme.IOGroupContainer mContainer;
 
 	public void Init(UIScheme.IOGroupContainer container)
@@ -30,9 +40,10 @@ public class IOSelfIOGroupDesign : IOGroupDesign {
 
 		for (byte i = 0; i < mContainer.BuildInfo.BuildString.Size; i++) 
 		{
-			mIOTogglers[i] = Instantiate (mIOPrefab, mIOContainer).GetComponent<IOToggler> ();
+			mIOTogglers[i] = Instantiate (mIOPrefab, mBitsContainer).GetComponent<IOToggler> ();
 			mIOTogglers[i].Init(mContainer.ParentScheme.Scheme, i, mContainer.BuildInfo.BuildString.Name, mContainer.BuildInfo.BuildString.IO);
 		}
+	    (mBitsContainer as RectTransform).sizeDelta = mContainer.BuildInfo.Size;
 
 		if (mContainer.BuildInfo.BuildString.Size > 0) 
 		{
@@ -101,5 +112,70 @@ public class IOSelfIOGroupDesign : IOGroupDesign {
 		SchemeDesigner.Instance.AddLinkStateChanged -= OnAddLinkStateChanged;
 		Destroy(gameObject);
 	}
+
+    #region ResizeCorner
+
+    private Vector2 mCursorStartPos, mStartPos, mStartSize;
+    private static bool mDragStarted;
+
+    public void CornerOnPointerEnter()
+    {
+        if (mDragStarted)
+            return;
+        CursorsManager.Instance.SetCursor(CursorType.Resize);
+    }
+
+    public void CornerOnPointerExit()
+    {
+        if (mDragStarted)
+            return;
+        CursorsManager.Instance.SetCursor(CursorType.Default);
+    }
+
+    public void CornerOnBeginDrag(BaseEventData eventData)
+    {
+        CornerOnPointerEnter();
+        mDragStarted = true;
+
+        var pEventData = (PointerEventData)eventData;
+        var ioTransform = (RectTransform)mIOContainer;
+        var bitsTransform = (RectTransform)mBitsContainer;
+
+        mCursorStartPos = Extensions.ScreenToWorldPos(pEventData.position).ToVector2();
+        mStartPos = ioTransform.position;
+        mStartSize = bitsTransform.sizeDelta;
+    }
+
+    public void CornerOnDrag(BaseEventData eventData)
+    {
+        var pEventData = (PointerEventData)eventData;
+        var ioTransform = (RectTransform)mIOContainer;
+        var bitsTransform = (RectTransform)mBitsContainer;
+
+        if (pEventData.button != PointerEventData.InputButton.Left)
+            return;
+        var worldPos = Extensions.ScreenToWorldPos(pEventData.position).ToVector2();
+        var deltaPos = worldPos - mCursorStartPos;
+        deltaPos.x = 0;
+
+        var newSize = mStartSize + deltaPos.InverseY() / 2;
+        var actualSize = newSize.ClampMin(mMinSize);
+        deltaPos = (actualSize - mStartSize).InverseY() * 2;
+
+        var newPos = mStartPos + deltaPos / 2;
+
+        ioTransform.position = newPos;
+        bitsTransform.sizeDelta = actualSize;
+        mContainer.BuildInfo.Position = transform.localPosition.ToVector2();
+        mContainer.BuildInfo.Size = actualSize;
+    }
+
+    public void CornerOnEndDrag()
+    {
+        mDragStarted = false;
+        CornerOnPointerExit();
+    }
+
+    #endregion ResizeCorner
 
 }
