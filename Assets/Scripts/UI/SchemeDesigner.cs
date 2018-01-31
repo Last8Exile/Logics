@@ -33,31 +33,32 @@ public class SchemeDesigner : MonoBehaviour {
 		mDialogs.Add(RAMX.DialogType, new DialogContainer(mRAMXDialogPrefab, typeof(RAMXDialog)));
 	}
 
-	//Dialogs
-	[SerializeField] private GameObject 
+    //Dialogs
+    [SerializeField] private GameObject 
 		mSchemeDialogPrefab = null,
 		mSizeSchemeDialogPrefab = null,
-		mRAMXDialogPrefab = null;
+		mRAMXDialogPrefab = null,
+        mNewSchemePrefab = null,
+        mNewLinkDialogPrefab = null,
+        mAddIOGroupDialogPrefab = null,
+        mConfirmDialogPrefab = null;
 
-	//Containers
-	[SerializeField] private Transform 
+    //Containers
+    [SerializeField] private Transform 
 		mUICanvas = null, 
 		mSchemeContainer = null, 
 		mLinksContainer = null;
 
-	//Prefabs
-	[SerializeField] private GameObject 
-		mNewSchemePrefab = null, 
-		mSelfDesignPrefab = null,
-		mSelfIOGroupPrefab = null,
-		mInnerDesignPrefab = null,
-		mLinkPrefab = null, 
-		mNewLinkDialogPrefab = null,
-		mAddIOGroupDialogPrefab = null,
-		mConfirmDialogPrefab = null;
+    //Prefabs
+    [SerializeField]
+    private GameObject
+        mSelfDesignPrefab = null,
+        mSelfIOGroupPrefab = null,
+        mInnerDesignPrefab = null,
+        mLinkPrefab = null;
 
-	//Buttons
-	[SerializeField] private Button 
+    //Buttons
+    [SerializeField] private Button 
 		mCreateButton = null, 
 		mSaveButton = null,
 		mIOGroupButton = null;
