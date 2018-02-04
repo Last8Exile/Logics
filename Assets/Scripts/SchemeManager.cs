@@ -110,5 +110,6 @@ public abstract class SchemeBuilder
 	public SchemeBuilder() {}
 	public abstract Scheme Build (string parameters);
 	public abstract string DialogType { get; }
+    [Newtonsoft.Json.JsonIgnore]
     public virtual string DesignType { get { return "Default"; } }
 }

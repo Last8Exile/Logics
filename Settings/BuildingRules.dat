@@ -7420,5 +7420,8 @@
         "TargetCount": 2
       }
     ]
+  },
+  "NumberDisplay": {
+    "$type": "NumberDisplayBuilder, Assembly-CSharp"
   }
 }
