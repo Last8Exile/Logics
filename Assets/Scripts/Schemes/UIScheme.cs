@@ -60,7 +60,7 @@ public class UIScheme : Scheme
 			Links.Remove(x);
 		});
 		removedLinks.Clear();
-		(container.Design as InnerSchemeDesign).DestroyThis();
+		(container.Design as BaseInnerSchemeDesign).DestroyThis();
 		container.Scheme.UnlinkAll();
 		InnerSchemes.Remove(container);
 		InnerSchemesList.Remove(container.Scheme);

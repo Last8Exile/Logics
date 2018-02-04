@@ -155,7 +155,23 @@ public static class Extensions {
 		return number;
 	}
 
-	public static string ToHex(this BitArray array)
+    public static int ToIntSigned(this BitArray array)
+    {
+        var number = 0;
+        var neg = array[array.Length - 1];
+        if (neg)
+            array = (array.Clone() as BitArray).Not();
+        for (int i = 0; i < array.Length-1; i++)
+        {
+            number += ((array[i] ? 1 : 0) * Extensions.Pow(2, i));
+        }
+        if (neg)
+            number = -(number + 1);
+
+        return number;
+    }
+
+    public static string ToHex(this BitArray array)
 	{
 		if (array.Length != 16)
 			throw new ArgumentException("str", "массив должнен состоять из 16-ти бит");

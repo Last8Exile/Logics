@@ -18,30 +18,28 @@ public class SchemeDesigner : MonoBehaviour {
 	}
 	private static SchemeDesigner mInstance;
 
-	private void Init ()
-	{
-		mDialogs = new Dictionary<string, DialogContainer>();
-		mDialogs.Add("Scheme", new DialogContainer(mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
-		mDialogs.Add(NAND.DialogType, new DialogContainer(mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
-		mDialogs.Add(CONST.DialogType, new DialogContainer(mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
-		mDialogs.Add(DFF.DialogType, new DialogContainer(mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
-		mDialogs.Add(NANDX.DialogType, new DialogContainer(mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
-		mDialogs.Add(ANDX.DialogType, new DialogContainer(mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
-		mDialogs.Add(ORX.DialogType, new DialogContainer(mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
-		mDialogs.Add(NOTX.DialogType, new DialogContainer(mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
-		mDialogs.Add(XORX.DialogType, new DialogContainer(mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
-		mDialogs.Add(RAMX.DialogType, new DialogContainer(mRAMXDialogPrefab, typeof(RAMXDialog)));
-	}
+    [Serializable]
+    public struct Dialogs
+    {
+        public GameObject
+            mSchemeDialogPrefab,
+            mSizeSchemeDialogPrefab,
+            mRAMXDialogPrefab,
+            mNumberDisplayDialogPrefab;
+    }
+    [SerializeField]
+    private Dialogs mDialogsStruct;
 
-    //Dialogs
-    [SerializeField] private GameObject 
-		mSchemeDialogPrefab = null,
-		mSizeSchemeDialogPrefab = null,
-		mRAMXDialogPrefab = null,
-        mNewSchemePrefab = null,
-        mNewLinkDialogPrefab = null,
-        mAddIOGroupDialogPrefab = null,
-        mConfirmDialogPrefab = null;
+    [Serializable]
+    public struct Designs
+    {
+        public GameObject
+            mInnerDesignPrefab,
+            mNumberDisplayDesignPrefab;
+    }
+    [SerializeField]
+    private Designs mDesignsStruct;
+
 
     //Containers
     [SerializeField] private Transform 
@@ -54,8 +52,12 @@ public class SchemeDesigner : MonoBehaviour {
     private GameObject
         mSelfDesignPrefab = null,
         mSelfIOGroupPrefab = null,
-        mInnerDesignPrefab = null,
-        mLinkPrefab = null;
+        mLinkPrefab = null,
+        mNewSchemePrefab = null,
+        mNewLinkDialogPrefab = null,
+        mAddIOGroupDialogPrefab = null,
+        mConfirmDialogPrefab = null;
+
 
     //Buttons
     [SerializeField] private Button 
@@ -63,11 +65,32 @@ public class SchemeDesigner : MonoBehaviour {
 		mSaveButton = null,
 		mIOGroupButton = null;
 
-	private Dictionary<string,DialogContainer> mDialogs;
+    private Dictionary<string, DialogContainer> mDialogs;
+    private Dictionary<string, DesignContainer> mDesigns;
 
 	public UIScheme CurrentScheme;
 
-	public void CreateScheme()
+    private void Init()
+    {
+        mDialogs = new Dictionary<string, DialogContainer>();
+        mDialogs.Add("Scheme", new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
+        mDialogs.Add(NAND.DialogType, new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
+        mDialogs.Add(CONST.DialogType, new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
+        mDialogs.Add(DFF.DialogType, new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
+        mDialogs.Add(NANDX.DialogType, new DialogContainer(mDialogsStruct.mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
+        mDialogs.Add(ANDX.DialogType, new DialogContainer(mDialogsStruct.mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
+        mDialogs.Add(ORX.DialogType, new DialogContainer(mDialogsStruct.mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
+        mDialogs.Add(NOTX.DialogType, new DialogContainer(mDialogsStruct.mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
+        mDialogs.Add(XORX.DialogType, new DialogContainer(mDialogsStruct.mSizeSchemeDialogPrefab, typeof(SizeSchemeDialog)));
+        mDialogs.Add(RAMX.DialogType, new DialogContainer(mDialogsStruct.mRAMXDialogPrefab, typeof(RAMXDialog)));
+        mDialogs.Add(NumberDisplay.DialogType, new DialogContainer(mDialogsStruct.mNumberDisplayDialogPrefab, typeof(NumberDisplayDialog)));
+
+        mDesigns = new Dictionary<string, DesignContainer>();
+        mDesigns.Add("Default", new DesignContainer(mDesignsStruct.mInnerDesignPrefab, typeof(InnerSchemeDesign)));
+        mDesigns.Add(NumberDisplay.DesignType, new DesignContainer(mDesignsStruct.mNumberDisplayDesignPrefab, typeof(NumberDisplayDesign)));
+    }
+
+    public void CreateScheme()
 	{
 		StartCoroutine (createScheme ());
 	}
@@ -136,9 +159,11 @@ public class SchemeDesigner : MonoBehaviour {
 		return design;
 	}
 
-	public InnerSchemeDesign CreateInnerScheme(UIScheme.InnerContainer container)
+	public BaseInnerSchemeDesign CreateInnerScheme(UIScheme.InnerContainer container)
 	{
-		var innerScheme = Instantiate (mInnerDesignPrefab,mSchemeContainer).GetComponent<InnerSchemeDesign> ();
+	    var designName = SchemeManager.Instance.GetBuildingRule(container.InnerBuildInfo.BuildString.Type).DesignType;
+	    var designContainer = mDesigns[designName];
+	    var innerScheme = (BaseInnerSchemeDesign)Instantiate(designContainer.Prefab, mSchemeContainer).GetComponent(designContainer.Type);
 		innerScheme.Init (container);
 		return innerScheme;
 	}
@@ -339,6 +364,18 @@ public class SchemeDesigner : MonoBehaviour {
 		public GameObject Prefab;
 		public Type Type;
 	}
+
+    private class DesignContainer
+    {
+        public DesignContainer(GameObject prefab, Type type)
+        {
+            Prefab = prefab;
+            Type = type;
+        }
+
+        public GameObject Prefab;
+        public Type Type;
+    }
 
 	public class InnerSchemeBuildParams
 	{

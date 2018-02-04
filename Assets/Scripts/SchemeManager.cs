@@ -22,6 +22,8 @@ public class SchemeManager : MonoBehaviour
 	{
 		LoadSchemes();
 		LoadBaseSchemes();
+	    LoadVisualSchemes();
+
 	}
 
 	private void LoadBaseSchemes()
@@ -38,6 +40,13 @@ public class SchemeManager : MonoBehaviour
 		if (SchemesChanged != null)
 			SchemesChanged.Invoke();
 	}
+
+    private void LoadVisualSchemes()
+    {
+        mBuildingRules[NumberDisplay.Type] = new NumberDisplayBuilder();
+        if (SchemesChanged != null)
+            SchemesChanged.Invoke();
+    }
 
 	private Dictionary<string,SchemeBuilder> mBuildingRules;
 
@@ -101,4 +110,5 @@ public abstract class SchemeBuilder
 	public SchemeBuilder() {}
 	public abstract Scheme Build (string parameters);
 	public abstract string DialogType { get; }
+    public virtual string DesignType { get { return "Default"; } }
 }

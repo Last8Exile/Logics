@@ -16,7 +16,7 @@ public class ANDX : Scheme {
 	public override void SetIO(string groupName, BitArray values,byte valStart, byte valCount, byte ioStart, byte ioCount)
 	{
 		if (groupName != Input && groupName != Input2)
-			throw new UnityException ("Неверное имя группы блока NAND");
+			throw new UnityException ("Неверное имя группы блока ANDX");
 
 		var inputArray = IOGroups[groupName].IOArray;
 		var outputArray = IOGroups[Output].IOArray;

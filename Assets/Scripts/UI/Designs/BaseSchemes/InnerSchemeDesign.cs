@@ -4,7 +4,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class InnerSchemeDesign : SchemeDesign {
+public class InnerSchemeDesign : BaseInnerSchemeDesign
+{
 	
 	[SerializeField] private Text mName = null, mType = null;
 	[SerializeField] private Transform mInputs = null, mOutputs = null;
@@ -17,7 +18,7 @@ public class InnerSchemeDesign : SchemeDesign {
 	private Dictionary<string,IOInnerGroupDesign> mIOGroupDesigns;
 	private bool mSelfClick = false;
 
-	public void Init(UIScheme.InnerContainer container)
+	public override void Init(UIScheme.InnerContainer container)
 	{
 		mContainer = container;
 
@@ -112,7 +113,7 @@ public class InnerSchemeDesign : SchemeDesign {
 		mContainer.InnerBuildInfo.Position = transform.localPosition.ToVector2();
 	}
 
-	public void DestroyThis()
+	public override void DestroyThis()
 	{
 		SchemeDesigner.Instance.AddLinkStateChanged -= OnAddLinkStateChanged;
 		Destroy(gameObject);
