@@ -7423,5 +7423,8 @@
   },
   "NumberDisplay": {
     "$type": "NumberDisplayBuilder, Assembly-CSharp"
+  },
+  "SimulationStop": {
+    "$type": "SimulationStopBuilder, Assembly-CSharp"
   }
 }

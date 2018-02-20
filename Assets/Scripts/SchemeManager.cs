@@ -44,6 +44,7 @@ public class SchemeManager : MonoBehaviour
     private void LoadVisualSchemes()
     {
         mBuildingRules[NumberDisplay.Type] = new NumberDisplayBuilder();
+        mBuildingRules[SimulationStop.Type] = new SimulationStopBuilder();
         if (SchemesChanged != null)
             SchemesChanged.Invoke();
     }

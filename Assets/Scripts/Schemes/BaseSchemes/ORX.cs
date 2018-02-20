@@ -18,17 +18,11 @@ public class ORX : Scheme {
 		if (groupName != Input && groupName != Input2)
 			throw new UnityException ("Неверное имя группы блока ORX");
 
-		var inputArray = IOGroups[groupName].IOArray;
-		var outputArray = IOGroups[Output].IOArray;
-
-		for (var i = 0; i < ioCount; i++) 
-		{
-			inputArray[i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
-		}
-		RaiseChangedEvent (groupName);
+	    base.SetIO(groupName, values, valStart, valCount, ioStart, ioCount);
 
 		var inputArray1 = IOGroups[Input].IOArray;
 		var inputArray2 = IOGroups[Input2].IOArray;
+		var outputArray = IOGroups[Output].IOArray;
 
 		var oldValue = new BitArray(outputArray);
 		var newValue = new BitArray(inputArray1).Or(inputArray2);

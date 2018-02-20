@@ -143,8 +143,8 @@ public class UIScheme : Scheme
 		}
 		foreach (var innerScheme in InnerSchemes) 
 		{
+			(innerScheme.Design as BaseInnerSchemeDesign).DestroyThis();
 			innerScheme.Scheme.UnlinkAll();
-			(innerScheme.Design as InnerSchemeDesign).DestroyThis();
 		}
 		foreach (var ioGroup in IOGroupsInfo)
 		{

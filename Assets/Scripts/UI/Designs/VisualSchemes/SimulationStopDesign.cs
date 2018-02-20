@@ -3,25 +3,25 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class NumberDisplayDesign : BaseInnerSchemeDesign
+public class SimulationStopDesign : BaseInnerSchemeDesign
 {
-
     [SerializeField] private Text mName = null, mType = null;
-    [SerializeField] private InputField mNumber = null;
     [SerializeField] private Transform mInputs = null;
+    [SerializeField] private Toggle mToggle = null;
     [SerializeField] private Button mAddInputLink = null, mRemoveButton = null;
     [SerializeField] private GameObject mInputIOGroupPrefab = null;
 
     private List<IOInnerGroupDesign> mInputDesigns;
     private Dictionary<string, IOInnerGroupDesign> mIOGroupDesigns;
     private bool mSelfClick = false;
-    private NumberDisplay mScheme;
+    private SimulationStop mScheme;
 
     public override void Init(UIScheme.InnerContainer container)
     {
         base.Init(container);
-
-        mScheme = (NumberDisplay) mContainer.Scheme;
+        mScheme = (SimulationStop)mContainer.Scheme;
+        mContainer.InnerBuildInfo.BuildString.Parameters = mScheme.Enabled.ToString();
+        mToggle.isOn = mScheme.Enabled;
 
         gameObject.name = "Scheme: " + mContainer.InnerBuildInfo.BuildString.Name;
         transform.localPosition = mContainer.InnerBuildInfo.Position.ToVector3();
@@ -57,13 +57,6 @@ public class NumberDisplayDesign : BaseInnerSchemeDesign
             //mAddInputLink.gameObject.SetActive(true);
             mAddInputLink.onClick.AddListener(() => SchemeDesigner.Instance.AddLinkAsTarget(mContainer));
         }
-
-        mContainer.Scheme.IOGroups[NumberDisplay.Input].IOChanged += OnInputChanged;
-    }
-
-    private void OnInputChanged()
-    {
-        mNumber.text = mScheme.Number.ToString();
     }
 
     private void OnAddLinkStateChanged(bool sourceSelected)
@@ -77,8 +70,16 @@ public class NumberDisplayDesign : BaseInnerSchemeDesign
     public override void DestroyThis()
     {
         SchemeDesigner.Instance.AddLinkStateChanged -= OnAddLinkStateChanged;
-        mContainer.Scheme.IOGroups[NumberDisplay.Input].IOChanged -= OnInputChanged;
         Destroy(gameObject);
+    }
+
+    public bool Enabled
+    {
+        set
+        {
+            mScheme.Enabled = value;
+            mContainer.InnerBuildInfo.BuildString.Parameters = value.ToString();
+        }
     }
 
     public override IOBase IOBase(string groupName, byte number)

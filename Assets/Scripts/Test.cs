@@ -183,7 +183,7 @@ public class Test : MonoBehaviour {
 		yield return new WaitForEndOfFrame();
 
 		var schemeName = "PC";
-		var ramName = "RAM";
+        //var ramName = "RAM";
 		var romName = "ROM";
 		var cpuName = "Corei7";
 
@@ -330,13 +330,13 @@ public class Test : MonoBehaviour {
 		addCommand(Proggraming.BuildCommand(OperationCode.ADD, Operand1.Constant, Operand2.AR, Destination.Data, false, 0));
 
 		//LABEL: STOP
-		var stop = commandCounter;
+	    //var stop = commandCounter;
 		//JUMP TO END
 		addCommand(Proggraming.SetDataAddr(38));
 		addCommand(Proggraming.BuildCommand(OperationCode.ADD, Operand1.Constant, Operand2.Constant, Destination.None, true, 0));
 
 		//LABEL: INIT
-		var init = commandCounter;
+		//var init = commandCounter;
 		//AR = [0] - 1
 		addCommand(Proggraming.SetDataAddr(0));
 		addCommand(Proggraming.BuildCommand(OperationCode.ADD, Operand1.Constant, Operand2.Data, Destination.AR, false, -1));
@@ -376,7 +376,7 @@ public class Test : MonoBehaviour {
 
 		var instrName = "instr";
 		var dataName = "data";
-		var resetName = "reset";
+		//var resetName = "reset";
 		var instrAddrName = "instrAddr";
 		var dataAddrName = "dataAddr";
 		var resultName = "result";
@@ -384,7 +384,7 @@ public class Test : MonoBehaviour {
 
 		var instr = cpu.IOGroups[instrName];
 		var data = cpu.IOGroups[dataName];
-		var reset = cpu.IOGroups[resetName];
+		//var reset = cpu.IOGroups[resetName];
 		var instrAddr = cpu.IOGroups[instrAddrName];
 		var dataAddr = cpu.IOGroups[dataAddrName];
 		var result = cpu.IOGroups[resultName];

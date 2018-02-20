@@ -7,14 +7,7 @@ public class NumberDisplay : Scheme
 
     private Parameters mSchemeParameters;
 
-    public int Number
-    {
-        get
-        {
-            var array = IOGroups[Input].IOArray;
-            return mSchemeParameters.Signed ? array.ToIntSigned() : array.ToInt();
-        }
-    }
+    public int Number { get; private set; }
 
     public NumberDisplay(Parameters parameters) : base (1)
     {
@@ -33,6 +26,7 @@ public class NumberDisplay : Scheme
         {
             inputArray[i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
         }
+        Number = mSchemeParameters.Signed ? inputArray.ToIntSigned() : inputArray.ToInt();
         RaiseChangedEvent(groupName);
     }
 

@@ -16,14 +16,10 @@ public class NAND : Scheme {
 		if (groupName != Input)
 			throw new UnityException ("Неверное имя группы блока NAND");
 
-		var inputArray = IOGroups[Input].IOArray;
-		var outputArray = IOGroups[Output].IOArray;
+	    base.SetIO(groupName, values, valStart, valCount, ioStart, ioCount);
 
-		for (var i = 0; i < ioCount; i++) 
-		{
-			inputArray[i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
-		}
-		RaiseChangedEvent (Input);
+        var inputArray = IOGroups[Input].IOArray;
+		var outputArray = IOGroups[Output].IOArray;
 
 		var oldValue = outputArray[0];
 		outputArray[0] = !(inputArray[0] && inputArray[1]);

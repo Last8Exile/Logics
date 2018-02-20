@@ -34,15 +34,17 @@ public class RAMX : Scheme {
 		if (groupName != Input && groupName != Load && groupName != Address)
 			throw new UnityException ("Неверное имя группы блока RAMX");
 
-		mLastValue[groupName] = new BitArray(IOGroups[groupName].IOArray);
+        var lastValue = new BitArray(IOGroups[groupName].IOArray);
 		for (var i = 0; i < ioCount; i++) 
 		{
-			mLastValue[groupName][i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
+		    lastValue[i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
 		}
-		if (mTickStarted)
+	    mLastValue[groupName] = lastValue;
+
+        if (mTickStarted)
 			return;
 
-		IOGroups[groupName].IOArray = mLastValue[groupName];
+	    IOGroups[groupName].IOArray = lastValue;
 		RaiseChangedEvent(groupName);
 
 		if (groupName == Address)

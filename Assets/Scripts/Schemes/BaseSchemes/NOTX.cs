@@ -17,14 +17,10 @@ public class NOTX : Scheme {
 		if (groupName != Input)
 			throw new UnityException ("Неверное имя группы блока NOTX");
 
-		var inputArray = IOGroups[Input].IOArray;
-		var outputArray = IOGroups[Output].IOArray;
+	    base.SetIO(groupName, values, valStart, valCount, ioStart, ioCount);
 
-		for (var i = 0; i < ioCount; i++) 
-		{
-			inputArray[i + ioStart] = valCount == 1 ? values[valStart] : values[i + valStart];
-		}
-		RaiseChangedEvent (groupName);
+        var inputArray = IOGroups[Input].IOArray;
+		var outputArray = IOGroups[Output].IOArray;
 
 		var oldValue = new BitArray(outputArray);
 		var newValue = new BitArray(inputArray).Not();

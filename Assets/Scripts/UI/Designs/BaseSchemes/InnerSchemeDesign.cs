@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class InnerSchemeDesign : BaseInnerSchemeDesign
@@ -10,17 +9,16 @@ public class InnerSchemeDesign : BaseInnerSchemeDesign
 	[SerializeField] private Text mName = null, mType = null;
 	[SerializeField] private Transform mInputs = null, mOutputs = null;
 	[SerializeField] private Button mAddInputLink = null, mAddOutputLink = null, mRemoveButton = null;
-	[SerializeField] private EventTrigger mEventTrigger = null;
 	[SerializeField] private GameObject mInputIOGroupPrefab = null, mOutputIOGroupPrefab = null;
 
-	private UIScheme.InnerContainer mContainer;
+	
 	private List<IOInnerGroupDesign> mInputDesigns, mOutputDesigns;
 	private Dictionary<string,IOInnerGroupDesign> mIOGroupDesigns;
 	private bool mSelfClick = false;
 
 	public override void Init(UIScheme.InnerContainer container)
 	{
-		mContainer = container;
+	    base.Init(container);
 
 		gameObject.name = "Scheme: " + mContainer.InnerBuildInfo.BuildString.Name;
 		transform.localPosition = mContainer.InnerBuildInfo.Position.ToVector3 ();
@@ -29,16 +27,6 @@ public class InnerSchemeDesign : BaseInnerSchemeDesign
 		mType.text = mContainer.InnerBuildInfo.BuildString.Type;
 
 		mRemoveButton.onClick.AddListener(() => SchemeDesigner.Instance.RemoveInnerScheme(mContainer));
-
-		EventTrigger.Entry entry = new EventTrigger.Entry();
-		entry.eventID = EventTriggerType.Drag;
-		entry.callback.AddListener((data) => { OnDrag((PointerEventData)data); });
-		mEventTrigger.triggers.Add(entry);
-
-		entry = new EventTrigger.Entry();
-		entry.eventID = EventTriggerType.BeginDrag;
-		entry.callback.AddListener((data) => { OnBeginDrag((PointerEventData)data); });
-		mEventTrigger.triggers.Add(entry);
 
 		var inputCount = mContainer.Scheme.IOGroups.Count((x) => x.Value.IO == IO.Input);
 		var outputCount = mContainer.Scheme.IOGroups.Count - inputCount;
@@ -95,23 +83,6 @@ public class InnerSchemeDesign : BaseInnerSchemeDesign
 
 		mAddOutputLink.gameObject.SetActive(!sourceSelected);
 	}
-    
-	private Vector2 mPosDiff;
-
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        mPosDiff = transform.position.ToVector2() - Extensions.ScreenToWorldPos(eventData.position).ToVector2();
-    }
-
-    public void OnDrag(PointerEventData eventData)
-	{
-		if (eventData.button != PointerEventData.InputButton.Left)
-			return;
-		var worldPos = Extensions.ScreenToWorldPos(eventData.position).ToVector2();
-		var newPos = worldPos + mPosDiff;
-		transform.position = newPos.ToVector3();
-		mContainer.InnerBuildInfo.Position = transform.localPosition.ToVector2();
-	}
 
 	public override void DestroyThis()
 	{
@@ -119,76 +90,8 @@ public class InnerSchemeDesign : BaseInnerSchemeDesign
 		Destroy(gameObject);
 	}
 
-	public override UIScheme.SchemeContainer SchemeContainer {
-		get {
-			return mContainer;
-		}
-	}
-
 	public override IOBase IOBase(string groupName, byte number)
 	{
 		return mIOGroupDesigns[groupName].IOBase(number);
 	}
-
-    #region ResizeCorner
-
-    private Vector2 mCursorStartPos, mStartPos, mStartSize;
-    private static bool mDragStarted;
-
-    public void CornerOnPointerEnter()
-    {
-        if (mDragStarted)
-            return;
-        CursorsManager.Instance.SetCursor(CursorType.Resize);
-    }
-
-    public void CornerOnPointerExit()
-    {
-        if (mDragStarted)
-            return;
-        CursorsManager.Instance.SetCursor(CursorType.Default);
-    }
-
-    public void CornerOnBeginDrag(BaseEventData eventData)
-    {
-        CornerOnPointerEnter();
-        mDragStarted = true;
-
-        var pEventData = (PointerEventData) eventData;
-        var rectTransform = (RectTransform) transform;
-        
-        mCursorStartPos = Extensions.ScreenToWorldPos(pEventData.position).ToVector2();
-        mStartPos = rectTransform.position;
-        mStartSize = rectTransform.sizeDelta;
-    }
-
-    public void CornerOnDrag(BaseEventData eventData)
-    {
-        var pEventData = (PointerEventData) eventData;
-        var rectTransform = (RectTransform)transform;
-
-        if (pEventData.button != PointerEventData.InputButton.Left)
-            return;
-        var worldPos = Extensions.ScreenToWorldPos(pEventData.position).ToVector2();
-        var deltaPos = worldPos - mCursorStartPos;
-
-        var newSize = mStartSize + deltaPos.InverseY() / 2;
-        var actualSize = newSize.ClampMin(new Vector2(240, 240));
-        deltaPos = (actualSize - mStartSize).InverseY() * 2;
-
-        var newPos = mStartPos + deltaPos / 2;
-
-        rectTransform.position = newPos;
-        rectTransform.sizeDelta = actualSize;
-        mContainer.InnerBuildInfo.Position = transform.localPosition.ToVector2();
-        mContainer.InnerBuildInfo.Size = actualSize;
-    }
-
-    public void CornerOnEndDrag()
-    {
-        mDragStarted = false;
-        CornerOnPointerExit();
-    }
-
-    #endregion ResizeCorner
 }

@@ -246,6 +246,7 @@
     <Compile Include="Assets\Scripts\Schemes\Scheme.cs" />
     <Compile Include="Assets\Scripts\Schemes\UIScheme.cs" />
     <Compile Include="Assets\Scripts\Schemes\VisualSchemes\NumberDisplay.cs" />
+    <Compile Include="Assets\Scripts\Schemes\VisualSchemes\SimulationStop.cs" />
     <Compile Include="Assets\Scripts\ShowOnlyAttribute.cs" />
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
@@ -260,6 +261,7 @@
     <Compile Include="Assets\Scripts\UI\Designs\SchemeDesign.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\SelfSchemeDesign.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\VisualSchemes\NumberDisplayDesign.cs" />
+    <Compile Include="Assets\Scripts\UI\Designs\VisualSchemes\SimulationStopDesign.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\AddIOGroupDialog.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\AddLinkDialog.cs" />
     <Compile Include="Assets\Scripts\UI\Dialogs\BaseSchemes\InnerSchemeDialog.cs" />
