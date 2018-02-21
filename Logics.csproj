@@ -237,6 +237,7 @@
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\ANDX.cs" />
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\CONST.cs" />
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\DFF.cs" />
+    <Compile Include="Assets\Scripts\Schemes\BaseSchemes\IntConst.cs" />
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\NAND.cs" />
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\NANDX.cs" />
     <Compile Include="Assets\Scripts\Schemes\BaseSchemes\NOTX.cs" />
@@ -251,6 +252,7 @@
     <Compile Include="Assets\Scripts\Singleton.cs" />
     <Compile Include="Assets\Scripts\Test.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\BaseSchemes\InnerSchemeDesign.cs" />
+    <Compile Include="Assets\Scripts\UI\Designs\BaseSchemes\IntConstDesign.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\IOBase.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\IOGroupDesign.cs" />
     <Compile Include="Assets\Scripts\UI\Designs\IOInnerGroupDesign.cs" />

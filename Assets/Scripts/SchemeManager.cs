@@ -37,6 +37,7 @@ public class SchemeManager : MonoBehaviour
 		mBuildingRules[NOTX.Type] = new NOTXBuilder();
 		mBuildingRules[XORX.Type] = new XORXBuilder();
 		mBuildingRules[RAMX.Type] = new RAMXBuilder();
+	    mBuildingRules[IntConst.Type] = new IntConstBuilder();
 		if (SchemesChanged != null)
 			SchemesChanged.Invoke();
 	}

@@ -36,7 +36,8 @@ public class SchemeDesigner : MonoBehaviour {
         public GameObject
             mInnerDesignPrefab,
             mNumberDisplayDesignPrefab,
-            mSimulationStopDesignPrefab;
+            mSimulationStopDesignPrefab,
+            mIntConstDesignPrefab;
     }
     [SerializeField]
     private Designs mDesignsStruct;
@@ -86,11 +87,13 @@ public class SchemeDesigner : MonoBehaviour {
         mDialogs.Add(RAMX.DialogType, new DialogContainer(mDialogsStruct.mRAMXDialogPrefab, typeof(RAMXDialog)));
         mDialogs.Add(NumberDisplay.DialogType, new DialogContainer(mDialogsStruct.mNumberDisplayDialogPrefab, typeof(NumberDisplayDialog)));
         mDialogs.Add(SimulationStop.DialogType, new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
+        mDialogs.Add(IntConst.DialogType, new DialogContainer(mDialogsStruct.mSchemeDialogPrefab, typeof(InnerSchemeDialog)));
 
         mDesigns = new Dictionary<string, DesignContainer>();
         mDesigns.Add("Default", new DesignContainer(mDesignsStruct.mInnerDesignPrefab, typeof(InnerSchemeDesign)));
         mDesigns.Add(NumberDisplay.DesignType, new DesignContainer(mDesignsStruct.mNumberDisplayDesignPrefab, typeof(NumberDisplayDesign)));
         mDesigns.Add(SimulationStop.DesignType, new DesignContainer(mDesignsStruct.mSimulationStopDesignPrefab, typeof(SimulationStopDesign)));
+        mDesigns.Add(IntConst.DesignType, new DesignContainer(mDesignsStruct.mIntConstDesignPrefab, typeof(IntConstDesign)));
     }
 
     public void CreateScheme()

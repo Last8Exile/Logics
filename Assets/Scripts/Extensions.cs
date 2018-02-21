@@ -125,18 +125,25 @@ public static class Extensions {
 		return x * x;
 	}
 
-	public static BitArray FromINT(int number,int size)
+	public static BitArray FromInt(int number,int size)
 	{
 		var array = new BitArray(size);
+	    var negative = number < 0;
+	    if (negative)
+	        number = -number - 1;
 		for (int i = 0; i < size; i++)
 		{
 			array[i] = number % 2 == 1;
 			number /= 2;
+		    if (number == 0)
+		        break;
 		}
+	    if (negative)
+	        array = array.Not();
 		return new BitArray(array);
 	}
 
-	public static BitArray FromHEX(string str)
+	public static BitArray FromHex(string str)
 	{
 		if (str.Length != 4)
 			throw new ArgumentException("str", "строка должна состоять из 4-ёх символов");

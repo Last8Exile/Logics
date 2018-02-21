@@ -6,3 +6,4 @@ Builds/*
 Logics.lnk
 MakeBackup.bat
 Deploy.bat
+RestoreBackup.bat

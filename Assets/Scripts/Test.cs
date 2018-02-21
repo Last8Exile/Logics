@@ -234,12 +234,12 @@ public class Test : MonoBehaviour {
 		cpu.SetIO(resetName, Extensions.Array(true), 0, 1, 0, 1);
 		log();//2
 
-		rom.LoadValue(Extensions.FromHEX("80FF"), 0);
-		rom.LoadValue(Extensions.FromHEX("3C01"), 1);
-		rom.LoadValue(Extensions.FromHEX("0000"), 2);
-		rom.LoadValue(Extensions.FromHEX("4000"), 3);
-		rom.LoadValue(Extensions.FromHEX("7800"), 4);
-		rom.LoadValue(Extensions.FromHEX("1020"), 5);
+		rom.LoadValue(Extensions.FromHex("80FF"), 0);
+		rom.LoadValue(Extensions.FromHex("3C01"), 1);
+		rom.LoadValue(Extensions.FromHex("0000"), 2);
+		rom.LoadValue(Extensions.FromHex("4000"), 3);
+		rom.LoadValue(Extensions.FromHex("7800"), 4);
+		rom.LoadValue(Extensions.FromHex("1020"), 5);
 
 		cpu.SetIO(resetName, Extensions.Array(false), 0, 1, 0, 1);
 		log();//3
@@ -250,8 +250,8 @@ public class Test : MonoBehaviour {
 		log();//7
 		log();//8
 
-		rom.LoadValue(Extensions.FromHEX("1000"), 1);
-		rom.LoadValue(Extensions.FromHEX("1000"), 2);
+		rom.LoadValue(Extensions.FromHex("1000"), 1);
+		rom.LoadValue(Extensions.FromHex("1000"), 2);
 		log();//9
 		log();//10
 
@@ -298,7 +298,7 @@ public class Test : MonoBehaviour {
 			commandCounter++;
 		});
 			
-		ram.LoadValue(Extensions.FromINT(FIBNumber, 16), 0);
+		ram.LoadValue(Extensions.FromInt(FIBNumber, 16), 0);
 
 		//BEGIN
 		//[2] = 1
