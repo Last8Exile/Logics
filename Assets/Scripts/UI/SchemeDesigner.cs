@@ -246,19 +246,26 @@ public class SchemeDesigner : MonoBehaviour {
     }
 
     public void AddInnerScheme(string type)
+    {
+        if (CurrentScheme == null)
+        {
+            Console.Instance.Log("Сначала необходимо создать или загрузить схему");
+            return;
+        }
+        AddInnerSchemeAdv(type);
+    }
+
+    public InnerSchemeDialog AddInnerSchemeAdv(string type)
 	{
-		if (CurrentScheme == null) {
-			Console.Instance.Log("Сначала необходимо создать или загрузить схему");
-			return;
-		}
-		StartCoroutine(addInnerScheme(type));
+	    var builder = SchemeManager.Instance.GetBuildingRule(type);
+	    var dialogContainer = mDialogs[builder.DialogType];
+	    var dialog = (InnerSchemeDialog)Instantiate(dialogContainer.Prefab, mUICanvas).GetComponent(dialogContainer.Type);
+        StartCoroutine(addInnerScheme(type,dialog));
+	    return dialog;
 	}
 
-	private IEnumerator addInnerScheme(string type)
+	private IEnumerator addInnerScheme(string type, InnerSchemeDialog dialog)
 	{
-		var builder = SchemeManager.Instance.GetBuildingRule(type);
-		var dialogContainer = mDialogs[builder.DialogType];
-		var dialog = (InnerSchemeDialog)Instantiate(dialogContainer.Prefab, mUICanvas).GetComponent(dialogContainer.Type);
 		dialog.ShowDialog(type);
 		yield return new WaitWhile(() => dialog.DialogResult == DialogResult.NotReady);
 
@@ -275,14 +282,21 @@ public class SchemeDesigner : MonoBehaviour {
 		yield break;
 	}
 
-	public void RemoveInnerScheme(UIScheme.InnerContainer container)
+    public void RemoveInnerScheme(UIScheme.InnerContainer container)
+    {
+        RemoveInnerSchemeAdv(container);
+    }
+
+
+    public ConfirmDialog RemoveInnerSchemeAdv(UIScheme.InnerContainer container)
 	{
-		StartCoroutine(removeInnerScheme(container));
+	    var dialog = Instantiate(mConfirmDialogPrefab, mUICanvas).GetComponent<ConfirmDialog>();
+	    StartCoroutine(removeInnerScheme(container, dialog));
+	    return dialog;
 	}
 
-	private IEnumerator removeInnerScheme(UIScheme.InnerContainer container)
+	private IEnumerator removeInnerScheme(UIScheme.InnerContainer container, ConfirmDialog dialog)
 	{
-		var dialog = Instantiate(mConfirmDialogPrefab, mUICanvas).GetComponent<ConfirmDialog>();
 		dialog.ShowDialog("Удалить схему " + container.SchemeName + "?", "Удалив схему, будут удалены все связанные с ней ссылки");
 		yield return new WaitWhile(() => dialog.DialogResult == DialogResult.NotReady);
 
@@ -313,25 +327,32 @@ public class SchemeDesigner : MonoBehaviour {
 		if (AddLinkStateChanged != null)
 			AddLinkStateChanged.Invoke(true);
 	}
-	public void AddLinkAsTarget(UIScheme.IOGroupContainer selfIOGroupContainer)
+	public void AddLinkAsTarget(UIScheme.IOGroupContainer selfIOGroupContainer, bool complete = true)
 	{
 		mTargetContainerGroup = selfIOGroupContainer;
-		StartCoroutine(addLink());
 		if (AddLinkStateChanged != null)
 			AddLinkStateChanged.Invoke(false);
+	    if (complete)
+	        AddLinkAdv();
 	}
-	public void AddLinkAsTarget(UIScheme.InnerContainer innerContainer)
+	public void AddLinkAsTarget(UIScheme.InnerContainer innerContainer, bool complete = true)
 	{
 		mTargetContainerInner = innerContainer;
-		StartCoroutine(addLink());
 		if (AddLinkStateChanged != null)
 			AddLinkStateChanged.Invoke(false);
-	}
+	    if (complete)
+            AddLinkAdv();
+    }
 
-	private IEnumerator addLink()
+    public AddLinkDialog AddLinkAdv()
+    {
+        var dialog = Instantiate(mNewLinkDialogPrefab, mUICanvas).GetComponent<AddLinkDialog>();
+        StartCoroutine(addLink(dialog));
+        return dialog;
+    }
+
+	private IEnumerator addLink(AddLinkDialog dialog)
 	{
-		var dialog = Instantiate(mNewLinkDialogPrefab, mUICanvas).GetComponent<AddLinkDialog>();
-
 		var startName = "";
 		var endName = "";
 

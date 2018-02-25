@@ -83,7 +83,22 @@ public static class Extensions {
 		return Camera.main.ScreenToWorldPoint(point.ToVector3());
 	}
 
-	public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
+    public static Vector3 ScreenToWorldPos(Vector3 point)
+    {
+        return Camera.main.ScreenToWorldPoint(point);
+    }
+
+    public static Vector2 WorldPosToScreen(Vector2 point)
+    {
+        return Camera.main.WorldToScreenPoint(point.ToVector3()) * 2;
+    }
+
+    public static Vector2 WorldPosToScreen(Vector3 point)
+    {
+        return Camera.main.WorldToScreenPoint(point) * 2;
+    }
+
+    public static void ForEach<T>(this IEnumerable<T> collection, Action<T> action)
 	{
 		foreach (var item in collection)
 			action(item);

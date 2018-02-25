@@ -29,22 +29,26 @@ public class Demo : MonoBehaviour
         int counter = 0;
 
         if (number < ++counter)
+            yield return StartCoroutine(Part0());
+        if (number < ++counter)
             yield return StartCoroutine(Part1());
-
         if (number < ++counter)
             yield return StartCoroutine(Part2());
+        if (number < ++counter)
+            yield return StartCoroutine(Part3());
     }
 
     #region Parts
 
     //Show NOT
-    private IEnumerator Part1()
+    private IEnumerator Part0()
     {
         var designer = SchemeDesigner.Instance;
         designer.LoadScheme("NOT");
         yield return new WaitForSeconds(2);
 
-        yield return StartCoroutine(SetCameraSize(500));
+        StartCoroutine(SetCameraPos(Vector2.zero));
+        yield return StartCoroutine(SetCameraSize(600));
 
         var waitLock = StartWait();
         while (!waitLock.Complete)
@@ -57,17 +61,20 @@ public class Demo : MonoBehaviour
     }
 
     //Create MyAND
-    private IEnumerator Part2()
+    private IEnumerator Part1()
     {
         StartCoroutine(SetCameraSize(750));
+        StartCoroutine(SetCameraPos(Vector2.zero));
 
         //New Scheme
         var designer = SchemeDesigner.Instance;
         var newSchemeDialog = designer.CreateSchemeAdv();
         yield return new WaitForSeconds(0.5f);
         yield return StartCoroutine(FillInputField(newSchemeDialog.GetComponentInChildren<InputField>(), "MyAND", 0.5f));
-        yield return StartCoroutine(WaitForInput());
+        yield return new WaitForSeconds(1.5f);
         newSchemeDialog.Create();
+
+        #region IOGroups
 
         //Input
         yield return StartCoroutine(WaitForInput());
@@ -82,7 +89,7 @@ public class Demo : MonoBehaviour
         //MoveInput
         yield return new WaitForSeconds(0.5f);
         var ioDesign = designer.CurrentScheme.IOGroupsInfo[0].Design as IOSelfIOGroupDesign;
-        yield return StartCoroutine(DragIOSelfIOGroupDesign(ioDesign, new Vector2(-600, 70)));
+        yield return StartCoroutine(DragIOSelfIOGroupDesign(ioDesign, new Vector2(-450, 75)));
 
         //Output
         yield return StartCoroutine(WaitForInput());
@@ -103,7 +110,173 @@ public class Demo : MonoBehaviour
         //MoveOutput
         yield return new WaitForSeconds(0.5f);
         ioDesign = designer.CurrentScheme.IOGroupsInfo[1].Design as IOSelfIOGroupDesign;
-        yield return StartCoroutine(DragIOSelfIOGroupDesign(ioDesign, new Vector2(600, 70)));
+        yield return StartCoroutine(DragIOSelfIOGroupDesign(ioDesign, new Vector2(450, 75)));
+
+        #endregion IOGroups
+
+        yield return StartCoroutine(WaitForInput());
+
+        #region InnerSchemes
+
+        //NAND
+        var innerDialog = designer.AddInnerSchemeAdv("NAND");
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(FillInputField(innerDialog.GetComponentInChildren<InputField>(), "Nand", 0.5f));
+        yield return new WaitForSeconds(0.5f);
+        innerDialog.Create();
+        yield return new WaitForSeconds(0.5f);
+        var innerDesign = designer.CurrentScheme.InnerSchemes[0].Design as BaseInnerSchemeDesign;
+        yield return StartCoroutine(DragBaseInnerSchameDesign(innerDesign, new Vector2(-200, 30)));
+
+        //NOT
+        innerDialog = designer.AddInnerSchemeAdv("NOT");
+        yield return new WaitForSeconds(0.5f);
+        yield return StartCoroutine(FillInputField(innerDialog.GetComponentInChildren<InputField>(), "Not", 0.5f));
+        yield return new WaitForSeconds(0.5f);
+        innerDialog.Create();
+        yield return new WaitForSeconds(0.5f);
+        innerDesign = designer.CurrentScheme.InnerSchemes[1].Design as BaseInnerSchemeDesign;
+        yield return StartCoroutine(DragBaseInnerSchameDesign(innerDesign, new Vector2(200, 30)));
+
+        #endregion InnerSchemes
+
+        yield return StartCoroutine(WaitForInput());
+
+        #region Links
+
+        //Input -> Nand
+        designer.AddLinkAsSource(designer.CurrentScheme.IOGroupsInfo[0]);
+        yield return StartCoroutine(WaitForInput());
+        designer.AddLinkAsTarget(designer.CurrentScheme.InnerSchemes[0], false);
+        var linkDialog = designer.AddLinkAdv();
+        yield return StartCoroutine(WaitForInput());
+        linkDialog.Create();
+
+        //Nand -> Not
+        yield return StartCoroutine(WaitForInput());
+        yield return new WaitForSeconds(1);
+        designer.AddLinkAsSource(designer.CurrentScheme.InnerSchemes[0]);
+        yield return new WaitForSeconds(0.5f);
+        designer.AddLinkAsTarget(designer.CurrentScheme.InnerSchemes[1], false);
+        linkDialog = designer.AddLinkAdv();
+        yield return new WaitForSeconds(0.5f);
+        linkDialog.Create();
+        yield return new WaitForSeconds(0.5f);
+        designer.AddLinkAsSource(designer.CurrentScheme.InnerSchemes[1]);
+        yield return new WaitForSeconds(0.5f);
+        designer.AddLinkAsTarget(designer.CurrentScheme.IOGroupsInfo[1], false);
+        linkDialog = designer.AddLinkAdv();
+        yield return new WaitForSeconds(0.5f);
+        linkDialog.Create();
+
+
+        #endregion Links
+
+        yield return StartCoroutine(WaitForInput());
+
+        #region Test
+
+        var waitLock = StartWait();
+        while (!waitLock.Complete)
+        {
+            designer.CurrentScheme.SetIO("Input", Extensions.FromInt(1, 2), 0, 2, 0, 2);
+            yield return new WaitForSeconds(2);
+            designer.CurrentScheme.SetIO("Input", Extensions.FromInt(2, 2), 0, 2, 0, 2);
+            yield return new WaitForSeconds(2);
+            designer.CurrentScheme.SetIO("Input", Extensions.FromInt(3, 2), 0, 2, 0, 2);
+            yield return new WaitForSeconds(2);
+            designer.CurrentScheme.SetIO("Input", Extensions.FromInt(0, 2), 0, 2, 0, 2);
+            yield return new WaitForSeconds(2);
+        }
+
+        #endregion Test
+
+    }
+
+    //Gates
+    private IEnumerator Part2()
+    {
+        var designer = SchemeDesigner.Instance;
+        designer.LoadScheme("OR");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraSize(1000));
+        StartCoroutine(SetCameraPos(new Vector2(-350, 100)));
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(1, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(2, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(3, 2), 0, 2, 0, 2);
+        yield return StartCoroutine(WaitForInput());
+
+        designer.LoadScheme("XOR");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraSize(1000));
+        StartCoroutine(SetCameraPos(new Vector2(-100, 350)));
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(1, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(2, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("Input", Extensions.FromInt(3, 2), 0, 2, 0, 2);
+        yield return StartCoroutine(WaitForInput());
+
+        designer.LoadScheme("FULLADDER");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraSize(1050));
+        StartCoroutine(SetCameraPos(new Vector2(-175, 200)));
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(3, 2), 0, 2, 0, 2);
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("CarryIn", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return StartCoroutine(WaitForInput());
+    }
+
+    //Memory
+    private IEnumerator Part3()
+    {
+        var designer = SchemeDesigner.Instance;
+
+        designer.LoadScheme("REGISTER");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraSize(933));
+        StartCoroutine(SetCameraPos(new Vector2(-150, 350)));
+        yield return StartCoroutine(WaitForInput());
+
+        var dialog = designer.RemoveInnerSchemeAdv(designer.CurrentScheme.InnerSchemes[1]);
+        yield return new WaitForSeconds(0.5f);
+        dialog.DialogResult = DialogResult.Ok;
+        yield return new WaitForSeconds(0.5f);
+        designer.AddLinkAsSource(designer.CurrentScheme.IOGroupsInfo[0]);
+        designer.AddLinkAsTarget(designer.CurrentScheme.InnerSchemes[0], false);
+        var linkDialog = designer.AddLinkAdv();
+        yield return new WaitForSeconds(0.5f);
+        linkDialog.Create();
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.Start();
+        yield return new WaitForSeconds(5f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(2f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(0, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(1.2f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(0.1f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(0, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(0.1f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(0.1f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(0, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(0.7f);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return StartCoroutine(WaitForInput());
+
+        designer.LoadScheme("REGISTER");
+        //TODO EXPLAIN REGISTER
+
+        CycleManager.Instance.Stop();
+        yield return StartCoroutine(WaitForInput());
     }
 
     #endregion Parts
@@ -173,10 +346,41 @@ public class Demo : MonoBehaviour
         camera.orthographicSize = size;
     }
 
+    private IEnumerator SetCameraPos(Vector2 pos, float speed = 0.1f)
+    {
+        var camera = Camera.main.transform;
+        var targetPos = pos.ToVector3(-10);
+        while ((camera.position - targetPos).sqrMagnitude > 0.1f)
+        {
+            camera.position = Vector3.Lerp(camera.position, targetPos, speed);
+            yield return null;
+        }
+        camera.position = targetPos;
+    }
+
     private IEnumerator DragIOSelfIOGroupDesign(IOSelfIOGroupDesign design, Vector2 delta, float speed = 0.1f)
     {
+        delta = Extensions.WorldPosToScreen(delta);
         var eventData = new PointerEventData(EventSystem.current);
         eventData.button = PointerEventData.InputButton.Left;
+        eventData.position = Extensions.WorldPosToScreen(Vector2.zero);
+        design.OnBeginDrag(eventData);
+        while ((eventData.position - delta).sqrMagnitude > 0.1f)
+        {
+            eventData.position = Vector2.Lerp(eventData.position, delta, speed);
+            design.OnDrag(eventData);
+            yield return null;
+        }
+        eventData.position = delta;
+        design.OnDrag(eventData);
+    }
+
+    private IEnumerator DragBaseInnerSchameDesign(BaseInnerSchemeDesign design, Vector2 delta, float speed = 0.1f)
+    {
+        delta = Extensions.WorldPosToScreen(delta);
+        var eventData = new PointerEventData(EventSystem.current);
+        eventData.button = PointerEventData.InputButton.Left;
+        eventData.position = Extensions.WorldPosToScreen(Vector2.zero);
         design.OnBeginDrag(eventData);
         while ((eventData.position - delta).sqrMagnitude > 0.1f)
         {
