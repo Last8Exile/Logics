@@ -96,15 +96,24 @@ public class SchemeDesigner : MonoBehaviour {
         mDesigns.Add(IntConst.DesignType, new DesignContainer(mDesignsStruct.mIntConstDesignPrefab, typeof(IntConstDesign)));
     }
 
+
     public void CreateScheme()
+    {
+        CreateSchemeAdv();
+    }
+
+    public NewSchemeDialog CreateSchemeAdv()
 	{
-		StartCoroutine (createScheme ());
+	    mCreateButton.interactable = false;
+	    var newSchemeDialog = Instantiate(mNewSchemePrefab, mUICanvas).GetComponent<NewSchemeDialog>();
+
+        StartCoroutine (createScheme (newSchemeDialog));
+
+	    return newSchemeDialog;
 	}
 
-	private IEnumerator createScheme()
+	private IEnumerator createScheme(NewSchemeDialog newSchemeDialog)
 	{
-		mCreateButton.interactable = false;
-		var newSchemeDialog = Instantiate (mNewSchemePrefab, mUICanvas).GetComponent<NewSchemeDialog> ();
 		yield return new WaitWhile (() => newSchemeDialog.DialogResult == DialogResult.NotReady);
 
 		var buildInfo = newSchemeDialog.BuildInfo;
@@ -183,16 +192,23 @@ public class SchemeDesigner : MonoBehaviour {
 
 	public void AddIOGroup()
 	{
-		if (CurrentScheme == null) {
-			Console.Instance.Log("Сначала необходимо создать или загрузить схему");
-			return;
-		}
-		StartCoroutine(addIOGroup());
+	    if (CurrentScheme == null)
+	    {
+	        Console.Instance.Log("Сначала необходимо создать или загрузить схему");
+	        return;
+	    }
+        AddIOGroupAdv();
 	}
 
-	private IEnumerator addIOGroup()
+    public AddIOGroupDialog AddIOGroupAdv()
+    {
+        var dialog = Instantiate(mAddIOGroupDialogPrefab, mUICanvas).GetComponent<AddIOGroupDialog>();
+        StartCoroutine(addIOGroup(dialog));
+        return dialog;
+    }
+
+    private IEnumerator addIOGroup(AddIOGroupDialog dialog)
 	{
-		var dialog = Instantiate(mAddIOGroupDialogPrefab, mUICanvas).GetComponent<AddIOGroupDialog>();
 		dialog.ShowDialog("НОВАЯ ГРУППА");
 		yield return new WaitWhile(() => dialog.DialogResult == DialogResult.NotReady);
 

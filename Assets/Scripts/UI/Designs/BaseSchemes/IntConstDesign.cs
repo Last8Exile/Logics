@@ -15,7 +15,6 @@ public class IntConstDesign : BaseInnerSchemeDesign
 
     private List<IOInnerGroupDesign> mOutputDesigns;
     private Dictionary<string, IOInnerGroupDesign> mIOGroupDesigns;
-    private bool mSelfClick = false;
     private IntConst mScheme;
 
     public override void Init(UIScheme.InnerContainer container)
@@ -59,7 +58,6 @@ public class IntConstDesign : BaseInnerSchemeDesign
             mAddOutputLink.gameObject.SetActive(true);
             mAddOutputLink.onClick.AddListener(() =>
             {
-                mSelfClick = true;
                 SchemeDesigner.Instance.AddLinkAsSource(mContainer);
             });
         }

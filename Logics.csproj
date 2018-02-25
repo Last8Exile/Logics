@@ -227,6 +227,7 @@
     <Compile Include="Assets\Scripts\Console.cs" />
     <Compile Include="Assets\Scripts\CursorsManager.cs" />
     <Compile Include="Assets\Scripts\CycleManager.cs" />
+    <Compile Include="Assets\Scripts\Demo.cs" />
     <Compile Include="Assets\Scripts\Extensions.cs" />
     <Compile Include="Assets\Scripts\InspectorButton.cs" />
     <Compile Include="Assets\Scripts\Link.cs" />

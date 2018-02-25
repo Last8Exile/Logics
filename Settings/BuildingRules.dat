@@ -18,8 +18,8 @@
           "IO": 0
         },
         "Position": {
-          "x": -320.0219,
-          "y": 37.7461853
+          "x": -313.419922,
+          "y": 75.15726
         },
         "Size": {
           "x": 50.0,
@@ -34,8 +34,8 @@
           "IO": 1
         },
         "Position": {
-          "x": 265.317322,
-          "y": 37.19914
+          "x": 266.417664,
+          "y": 56.4548378
         },
         "Size": {
           "x": 50.0,
@@ -52,8 +52,8 @@
           "Parameters": null
         },
         "Position": {
-          "x": -16.1290283,
-          "y": 24.9921188
+          "x": -0.174285889,
+          "y": 26.642601
         },
         "Size": {
           "x": 240.0,
@@ -7080,8 +7080,8 @@
           "Parameters": "16 16"
         },
         "Position": {
-          "x": 563.4573,
-          "y": 260.393738
+          "x": 763.778564,
+          "y": 797.486938
         },
         "Size": {
           "x": 240.0,
@@ -7096,8 +7096,8 @@
           "Parameters": "16 16"
         },
         "Position": {
-          "x": -547.045959,
-          "y": 241.794327
+          "x": -461.4013,
+          "y": 781.7908
         },
         "Size": {
           "x": 240.0,
@@ -7112,8 +7112,56 @@
           "Parameters": null
         },
         "Position": {
-          "x": 6.04839325,
-          "y": 229.838623
+          "x": 101.854256,
+          "y": 580.40094
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 642.0941
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Const",
+          "Type": "IntConst",
+          "Parameters": "0"
+        },
+        "Position": {
+          "x": -445.6422,
+          "y": 193.789032
+        },
+        "Size": {
+          "x": 286.4513,
+          "y": 447.5793
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Eq",
+          "Type": "Equals",
+          "Parameters": null
+        },
+        "Position": {
+          "x": 764.9951,
+          "y": 231.530762
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 502.7402
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Break",
+          "Type": "SimulationStop",
+          "Parameters": "True"
+        },
+        "Position": {
+          "x": 1075.63818,
+          "y": 317.901123
         },
         "Size": {
           "x": 240.0,
@@ -7178,6 +7226,36 @@
         "TargetName": "Corei7",
         "SourceGroupName": "Out",
         "TargetGroupName": "data",
+        "SourceStart": 0,
+        "SourceCount": 16,
+        "TargetStart": 0,
+        "TargetCount": 16
+      },
+      {
+        "SourceName": "Const",
+        "TargetName": "Eq",
+        "SourceGroupName": "Output",
+        "TargetGroupName": "In2",
+        "SourceStart": 0,
+        "SourceCount": 32,
+        "TargetStart": 0,
+        "TargetCount": 32
+      },
+      {
+        "SourceName": "Eq",
+        "TargetName": "Break",
+        "SourceGroupName": "Out",
+        "TargetGroupName": "Input",
+        "SourceStart": 0,
+        "SourceCount": 1,
+        "TargetStart": 0,
+        "TargetCount": 1
+      },
+      {
+        "SourceName": "Corei7",
+        "TargetName": "Eq",
+        "SourceGroupName": "instrAddr",
+        "TargetGroupName": "In1",
         "SourceStart": 0,
         "SourceCount": 16,
         "TargetStart": 0,
@@ -7426,5 +7504,228 @@
   },
   "SimulationStop": {
     "$type": "SimulationStopBuilder, Assembly-CSharp"
+  },
+  "IntConst": {
+    "$type": "IntConstBuilder, Assembly-CSharp"
+  },
+  "Equals": {
+    "$type": "UISchemeBuilder, Assembly-CSharp",
+    "SelfSchemeBuildInfo": {
+      "Name": "Equals"
+    },
+    "IOGroupsInfo": [
+      {
+        "BuildString": {
+          "Name": "In1",
+          "Size": 32,
+          "IO": 0
+        },
+        "Position": {
+          "x": -619.2039,
+          "y": 661.7812
+        },
+        "Size": {
+          "x": 50.0,
+          "y": 320.0
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "In2",
+          "Size": 32,
+          "IO": 0
+        },
+        "Position": {
+          "x": -620.1896,
+          "y": 229.68457
+        },
+        "Size": {
+          "x": 50.0,
+          "y": 320.0
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Out",
+          "Size": 1,
+          "IO": 1
+        },
+        "Position": {
+          "x": 848.7334,
+          "y": 478.086029
+        },
+        "Size": {
+          "x": 50.0,
+          "y": 50.0
+        },
+        "Version": 1
+      }
+    ],
+    "InnerSchemesBuildInfo": [
+      {
+        "BuildString": {
+          "Name": "Xor32",
+          "Type": "XORX",
+          "Parameters": "32"
+        },
+        "Position": {
+          "x": -295.60022,
+          "y": 446.5116
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 862.3156
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Or1",
+          "Type": "OR16W",
+          "Parameters": null
+        },
+        "Position": {
+          "x": 70.01065,
+          "y": 662.7661
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 426.694672
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Or2",
+          "Type": "OR16W",
+          "Parameters": null
+        },
+        "Position": {
+          "x": 70.01068,
+          "y": 231.812561
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 432.917816
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Or",
+          "Type": "OR",
+          "Parameters": null
+        },
+        "Position": {
+          "x": 354.191071,
+          "y": 449.996857
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 240.0
+        },
+        "Version": 1
+      },
+      {
+        "BuildString": {
+          "Name": "Not",
+          "Type": "NOT",
+          "Parameters": null
+        },
+        "Position": {
+          "x": 628.53894,
+          "y": 452.73468
+        },
+        "Size": {
+          "x": 240.0,
+          "y": 240.0
+        },
+        "Version": 1
+      }
+    ],
+    "LinksBuildInfo": [
+      {
+        "SourceName": "Equals",
+        "TargetName": "Xor32",
+        "SourceGroupName": "In1",
+        "TargetGroupName": "Input1",
+        "SourceStart": 0,
+        "SourceCount": 32,
+        "TargetStart": 0,
+        "TargetCount": 32
+      },
+      {
+        "SourceName": "Equals",
+        "TargetName": "Xor32",
+        "SourceGroupName": "In2",
+        "TargetGroupName": "Input2",
+        "SourceStart": 0,
+        "SourceCount": 32,
+        "TargetStart": 0,
+        "TargetCount": 32
+      },
+      {
+        "SourceName": "Xor32",
+        "TargetName": "Or1",
+        "SourceGroupName": "Output",
+        "TargetGroupName": "In",
+        "SourceStart": 0,
+        "SourceCount": 16,
+        "TargetStart": 0,
+        "TargetCount": 16
+      },
+      {
+        "SourceName": "Xor32",
+        "TargetName": "Or2",
+        "SourceGroupName": "Output",
+        "TargetGroupName": "In",
+        "SourceStart": 16,
+        "SourceCount": 16,
+        "TargetStart": 0,
+        "TargetCount": 16
+      },
+      {
+        "SourceName": "Or1",
+        "TargetName": "Or",
+        "SourceGroupName": "Out",
+        "TargetGroupName": "Input",
+        "SourceStart": 0,
+        "SourceCount": 1,
+        "TargetStart": 0,
+        "TargetCount": 1
+      },
+      {
+        "SourceName": "Or2",
+        "TargetName": "Or",
+        "SourceGroupName": "Out",
+        "TargetGroupName": "Input",
+        "SourceStart": 0,
+        "SourceCount": 1,
+        "TargetStart": 1,
+        "TargetCount": 1
+      },
+      {
+        "SourceName": "Or",
+        "TargetName": "Not",
+        "SourceGroupName": "Output",
+        "TargetGroupName": "Input",
+        "SourceStart": 0,
+        "SourceCount": 1,
+        "TargetStart": 0,
+        "TargetCount": 1
+      },
+      {
+        "SourceName": "Not",
+        "TargetName": "Equals",
+        "SourceGroupName": "Output",
+        "TargetGroupName": "Out",
+        "SourceStart": 0,
+        "SourceCount": 1,
+        "TargetStart": 0,
+        "TargetCount": 1
+      }
+    ]
   }
 }
