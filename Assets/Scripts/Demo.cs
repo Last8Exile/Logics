@@ -39,8 +39,6 @@ public class Demo : MonoBehaviour
             yield return StartCoroutine(Part3());
         if (number < ++counter)
             yield return StartCoroutine(Part4());
-        if (number < ++counter)
-            yield return StartCoroutine(Part5());
     }
 
     #region Parts
@@ -348,7 +346,6 @@ public class Demo : MonoBehaviour
         StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("instrAddr")), new Vector2(62.72046f, 1465.897f)));
         StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("result")), new Vector2(130f, 268.6553f)));
         yield return new WaitForSeconds(2f);
-        //StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("write")), new Vector2(0, 500)));
         StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("dataAddr")), new Vector2(0, 500)));
         StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("instrAddr")), new Vector2(0, 500)));
         StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("result")), new Vector2(0, 500)));
@@ -359,17 +356,9 @@ public class Demo : MonoBehaviour
         yield return StartCoroutine(WaitForInput());
     }
 
-    //Fib
-    private IEnumerator Part5()
-    {
-        var designer = SchemeDesigner.Instance;
-
-        yield return StartCoroutine(WaitForInput());
-    }
-
     #endregion Parts
 
-        private WaitLock StartWait(KeyCode keyCode = KeyCode.Space)
+    private WaitLock StartWait(KeyCode keyCode = KeyCode.Space)
     {
         var waitLock = new WaitLock();
         StartCoroutine(WaitForInput(waitLock, keyCode));
@@ -390,6 +379,7 @@ public class Demo : MonoBehaviour
         ShowWaitIcon();
         yield return new WaitForEndOfFrame();
         yield return new WaitUntil(() => Input.GetKeyUp(keyCode));
+        yield return new WaitForSeconds(0.1f);
         HideWaitIcon();
     }
 
