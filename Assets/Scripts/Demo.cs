@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -36,6 +37,10 @@ public class Demo : MonoBehaviour
             yield return StartCoroutine(Part2());
         if (number < ++counter)
             yield return StartCoroutine(Part3());
+        if (number < ++counter)
+            yield return StartCoroutine(Part4());
+        if (number < ++counter)
+            yield return StartCoroutine(Part5());
     }
 
     #region Parts
@@ -272,16 +277,99 @@ public class Demo : MonoBehaviour
         designer.CurrentScheme.SetIO("In", Extensions.FromInt(1, 1), 0, 1, 0, 1);
         yield return StartCoroutine(WaitForInput());
 
-        designer.LoadScheme("REGISTER");
-        //TODO EXPLAIN REGISTER
-
         CycleManager.Instance.Stop();
+        designer.LoadScheme("REGISTER");
+        yield return StartCoroutine(WaitForInput());
+    }
+
+    //AdvancedSchemes
+    private IEnumerator Part4()
+    {
+        var designer = SchemeDesigner.Instance;
+
+        //Counter
+        designer.LoadScheme("COUNTER16B");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraSize(1741));
+        StartCoroutine(SetCameraPos(new Vector2(-230, 900)));
+
+
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.Start();
+        yield return new WaitForSeconds(8f);
+        designer.CurrentScheme.SetIO("Reset", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        yield return new WaitForSeconds(4f);
+        designer.CurrentScheme.SetIO("Reset", Extensions.FromInt(0, 1), 0, 1, 0, 1);
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.Stop();
+        designer.CurrentScheme.SetIO("Load", Extensions.FromInt(1, 1), 0, 1, 0, 1);
+        designer.CurrentScheme.SetIO("In", Extensions.FromInt(64, 16), 0, 16, 0, 16);
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.RaiseTick();
+        designer.CurrentScheme.SetIO("Load", Extensions.FromInt(0, 1), 0, 1, 0, 1);
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.Start();
+        yield return new WaitForSeconds(4f);
+        yield return StartCoroutine(WaitForInput());
+        CycleManager.Instance.Stop();
+        
+        //Cpu Inside
+        designer.LoadScheme("CPU");
+        yield return new WaitForSeconds(0.5f);
+        StartCoroutine(SetCameraPos(new Vector2(-367, 1421)));
+        StartCoroutine(SetCameraSize(2639));
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(WaitForInput());
+
+        //LoadValues
+        designer.CurrentScheme.SetIO("instr", Extensions.FromInt(31771, 16), 0, 16, 0, 16);
+        designer.CurrentScheme.SetIO("data", Extensions.FromInt(6, 16), 0, 16, 0, 16);
+        yield return StartCoroutine(WaitForInput());
+
+        //Instr
+        StartCoroutine(SetCameraPos(new Vector2(-2902, 2263)));
+        StartCoroutine(SetCameraSize(1071));
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(WaitForInput());
+
+        //Data and Reset
+        StartCoroutine(SetCameraPos(new Vector2(-1649, 225)));
+        StartCoroutine(SetCameraSize(1319));
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(WaitForInput());
+
+        //Outs
+        StartCoroutine(SetCameraSize(1414));
+        StartCoroutine(SetCameraPos(new Vector2(2522, 2590)));
+        yield return new WaitForSeconds(2f);
+        var outputs = designer.CurrentScheme.IOGroupsInfo.Where(x => x.IOGroup.IO == IO.Output).Select(x => x.Design as IOSelfIOGroupDesign).ToList();
+        StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("write")), new Vector2(-4.2085f, 196.5029f)));
+        StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("dataAddr")), new Vector2(64.41211f, 1062.611f)));
+        StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("instrAddr")), new Vector2(62.72046f, 1465.897f)));
+        StartCoroutine(DragIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("result")), new Vector2(130f, 268.6553f)));
+        yield return new WaitForSeconds(2f);
+        //StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("write")), new Vector2(0, 500)));
+        StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("dataAddr")), new Vector2(0, 500)));
+        StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("instrAddr")), new Vector2(0, 500)));
+        StartCoroutine(ResizeIOSelfIOGroupDesign(outputs.First(x => x.gameObject.name.Contains("result")), new Vector2(0, 500)));
+        yield return new WaitForSeconds(2f);
+        StartCoroutine(SetCameraPos(new Vector2(2624.015f, 3330.604f)));
+        StartCoroutine(SetCameraSize(430));
+        yield return new WaitForSeconds(2f);
+        yield return StartCoroutine(WaitForInput());
+    }
+
+    //Fib
+    private IEnumerator Part5()
+    {
+        var designer = SchemeDesigner.Instance;
+
         yield return StartCoroutine(WaitForInput());
     }
 
     #endregion Parts
 
-    private WaitLock StartWait(KeyCode keyCode = KeyCode.Space)
+        private WaitLock StartWait(KeyCode keyCode = KeyCode.Space)
     {
         var waitLock = new WaitLock();
         StartCoroutine(WaitForInput(waitLock, keyCode));
@@ -373,6 +461,24 @@ public class Demo : MonoBehaviour
         }
         eventData.position = delta;
         design.OnDrag(eventData);
+    }
+
+    private IEnumerator ResizeIOSelfIOGroupDesign(IOSelfIOGroupDesign design, Vector2 delta, float speed = 0.1f)
+    {
+        delta = Extensions.WorldPosToScreen(delta);
+        var eventData = new PointerEventData(EventSystem.current);
+        eventData.button = PointerEventData.InputButton.Left;
+        eventData.position = Extensions.WorldPosToScreen(Vector2.zero);
+        design.CornerOnBeginDrag(eventData);
+        while ((eventData.position - delta).sqrMagnitude > 0.1f)
+        {
+            eventData.position = Vector2.Lerp(eventData.position, delta, speed);
+            design.CornerOnDrag(eventData);
+            yield return null;
+        }
+        eventData.position = delta;
+        design.CornerOnDrag(eventData);
+        design.CornerOnEndDrag();
     }
 
     private IEnumerator DragBaseInnerSchameDesign(BaseInnerSchemeDesign design, Vector2 delta, float speed = 0.1f)
